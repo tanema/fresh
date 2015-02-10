@@ -34,6 +34,8 @@ var settings = map[string]string{
 	"ignore_dirs":       "",
 }
 
+var ignorePaths map[string]bool
+
 var colors = map[string]string{
 	"reset":          "0",
 	"black":          "30",
@@ -94,9 +96,24 @@ func loadRunnerConfigSettings() {
 	}
 }
 
+func initIgnorePaths() {
+	ignorePathsArr := strings.Split(settings["ignore_dirs"], ",")
+	ignorePaths = make(map[string]bool)
+	for _, path := range ignorePathsArr {
+		path = settings["watch_path"] + "/" + strings.Trim(path, " ")
+    dp, err := filepath.Abs(path)
+    if err != nil {
+      continue
+    }
+    ignorePaths[dp] = true
+    fmt.Printf("Directory %s is not watched\n", dp)
+	}
+}
+
 func initSettings() {
 	loadEnvSettings()
 	loadRunnerConfigSettings()
+  initIgnorePaths()
 }
 
 func getenv(key, defaultValue string) string {

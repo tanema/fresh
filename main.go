@@ -23,6 +23,7 @@ import (
 func main() {
 	configPath := flag.String("c", "", "config file path")
 	watchPath := flag.String("w", "", "path to watch files")
+	ignorePaths := flag.String("i", "", "path to ignore")
 
 	flag.Parse()
 
@@ -37,6 +38,7 @@ func main() {
 		}
 	}
 	os.Setenv("RUNNER_WATCH_PATH", *watchPath)
+	os.Setenv("RUNNER_IGNORE_DIRS", *ignorePaths)
 
 	runner.Start()
 }
