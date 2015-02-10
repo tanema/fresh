@@ -42,9 +42,19 @@ func watch() {
 		fatal(err)
 	}
 
+	ignorePathsArr := strings.Split(settings["ignore_dirs"], ",")
+	ignorePaths := make(map[string]bool)
+	for _, path := range ignorePathsArr {
+		if strings.HasPrefix(path, " ") || strings.HasSuffix(path, " ") {
+			path = strings.Trim(path, " ")
+		}
+		ignorePaths[path] = true
+	}
+
+	watcherLog("Ignore Paths: %v", ignorePaths)
 	filepath.Walk(watchPath, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() && !isTmpDir(path) {
-			if len(path) > 1 && strings.HasPrefix(filepath.Base(path), ".") {
+			if _, ignore := ignorePaths[info.Name()]; (len(path) > 1 && strings.HasPrefix(filepath.Base(path), ".")) || ignore {
 				return filepath.SkipDir
 			}
 

@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/pkieltyka/fresh/runner"
+	"github.com/tanema/fresh/runner"
 )
 
 func main() {
